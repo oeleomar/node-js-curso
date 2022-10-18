@@ -6,6 +6,10 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
+app.get("/", (req, res) => {
+  res.send("Acesso negado");
+});
+
 app.get("/video/:id", (req, res) => {
   const range = req.headers.range;
   const id = req.params.id;
