@@ -1,11 +1,48 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model Processo {
+  id         String     @id @default(uuid())
+  setor      String
+  tipo       String
+  titulo     String     @unique
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt()
+  descricao  Descricao?
+
+  @@map("process")
+}
+
+model Descricao {
+  id         String   @id @default(uuid())
+  Processo   Processo @relation(fields: [processoId], references: [id])
+  processoId String   @unique
+  data       Data[]
+}
+
+model Data {
+  id          String     @unique
+  type        String
+  text        String?
+  level       Int?
+  style       String?
+  items       Items[]
+  Descricao   Descricao? @relation(fields: [descricaoId], references: [id])
+  descricaoId String?
+}
+
+model Items {
+  idItems String   @id @default(uuid())
+  Data    Data?    @relation(fields: [dataId], references: [id])
+  dataId  String?
+  content String[]
 }
