@@ -6,6 +6,15 @@ export class CreateProcessUseCase {
   async execute(req: CreateUserDTO): Promise<Processo> {
     const { titulo, tipo, descricao, setor } = req;
 
+    const processAlreadyExist = await prisma.processo.findFirst({
+      where: {
+        setor: setor,
+        titulo: titulo,
+      },
+    });
+
+    console.log(processAlreadyExist);
+
     //Criar o processo
     const process = await prisma.processo.create({
       data: {
