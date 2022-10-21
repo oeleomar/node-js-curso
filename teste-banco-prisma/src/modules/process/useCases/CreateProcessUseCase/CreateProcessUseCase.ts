@@ -4,15 +4,8 @@ import { CreateUserDTO } from "../../dtos/CreateUserDTO";
 
 export class CreateProcessUseCase {
   async execute(req: CreateUserDTO): Promise<Processo> {
-    const { titulo, setor, tipo, descricao } = req;
-    const processAlreadyExists = await prisma.processo.findUnique({
-      where: {
-        titulo,
-      },
-    });
+    const { titulo, tipo, descricao, setor } = req;
 
-    if (processAlreadyExists) {
-    }
     //Criar o processo
     const process = await prisma.processo.create({
       data: {

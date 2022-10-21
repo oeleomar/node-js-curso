@@ -1,7 +1,7 @@
 export interface CreateUserDTO {
-  setor: string;
   tipo: string;
   titulo: string;
+  setor: string;
   descricao: Data[];
 }
 

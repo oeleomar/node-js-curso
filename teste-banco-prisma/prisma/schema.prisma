@@ -14,7 +14,7 @@ model Processo {
   id         String     @id @default(uuid())
   setor      String
   tipo       String
-  titulo     String     @unique
+  titulo     String
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt()
   descricao  Descricao?

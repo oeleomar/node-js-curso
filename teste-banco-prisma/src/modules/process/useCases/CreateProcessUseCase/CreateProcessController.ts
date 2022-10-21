@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CreateProcessUseCase } from "./CreateProcessUseCase";
 
-export class CreateUserController {
+export class CreateProcessController {
   async handle(req: Request, res: Response) {
     const { setor, tipo, titulo, descricao } = req.body;
     const createProcessUseCase = new CreateProcessUseCase();
