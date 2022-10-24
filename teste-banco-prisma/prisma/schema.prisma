@@ -11,13 +11,15 @@ generator client {
 }
 
 model Processo {
-  id         String     @id @default(uuid())
+  id         String      @id @default(uuid())
   setor      String
   tipo       String
   titulo     String
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt()
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt()
   descricao  Descricao?
+  video      String
+  docs       Documentos?
 
   @@map("process")
 }
@@ -27,6 +29,8 @@ model Descricao {
   Processo   Processo @relation(fields: [processoId], references: [id])
   processoId String   @unique
   data       Data[]
+
+  @@map("descricao")
 }
 
 model Data {
@@ -38,6 +42,8 @@ model Data {
   items       Items[]
   Descricao   Descricao? @relation(fields: [descricaoId], references: [id])
   descricaoId String?
+
+  @@map("data")
 }
 
 model Items {
@@ -45,4 +51,21 @@ model Items {
   Data    Data?    @relation(fields: [dataId], references: [id])
   dataId  String?
   content String[]
+
+  @@map("items")
+}
+
+model Documentos {
+  id         String             @id @default(uuid())
+  titulo     String
+  antigo     DocumentoAntigos[]
+  processo   Processo?          @relation(fields: [processoId], references: [id])
+  processoId String?            @unique
+}
+
+model DocumentoAntigos {
+  id           String      @id @default(uuid())
+  titulo       String
+  Documentos   Documentos? @relation(fields: [documentosId], references: [id])
+  documentosId String?
 }

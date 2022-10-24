@@ -3,6 +3,13 @@ export interface CreateUserDTO {
   titulo: string;
   setor: string;
   descricao: Data[];
+  video: string;
+  docs: Docs;
+}
+
+interface Docs {
+  titulo: string;
+  antigo: Array<string>;
 }
 
 interface Data {

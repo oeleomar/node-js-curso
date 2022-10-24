@@ -5,7 +5,11 @@ import { CreateUserDTO } from "../../dtos/CreateUserDTO";
 
 export class CreateProcessUseCase {
   async execute(req: CreateUserDTO): Promise<Processo> {
-    const { titulo, tipo, descricao, setor } = req;
+    const { titulo, tipo, descricao, setor, video, docs } = req;
+    if (titulo === "" || tipo === "" || setor === "" || video === "")
+      throw new AppError(
+        "Campos Vazios, corrija e encaminhe os dados novamente.",
+      );
     const processAlreadyExist = await prisma.processo.findFirst({
       where: {
         setor: setor,
@@ -13,7 +17,7 @@ export class CreateProcessUseCase {
       },
     });
 
-    if (processAlreadyExist) throw new AppError("Usuário já existe");
+    if (processAlreadyExist) throw new AppError("Processo já existe");
 
     //Criar o processo
     const process = await prisma.processo.create({
@@ -21,6 +25,7 @@ export class CreateProcessUseCase {
         setor,
         tipo,
         titulo,
+        video,
       },
     });
 
@@ -48,6 +53,13 @@ export class CreateProcessUseCase {
       });
 
       return newData;
+    });
+
+    const docsBD = await prisma.documentos.create({
+      data: {
+        titulo: docs.titulo,
+        processoId: process.id,
+      },
     });
 
     return process;

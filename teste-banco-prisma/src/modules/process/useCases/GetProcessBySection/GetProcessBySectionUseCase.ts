@@ -15,6 +15,11 @@ export class GetProcessBySection {
             data: true,
           },
         },
+        docs: {
+          include: {
+            antigo: true,
+          },
+        },
       },
     });
 
