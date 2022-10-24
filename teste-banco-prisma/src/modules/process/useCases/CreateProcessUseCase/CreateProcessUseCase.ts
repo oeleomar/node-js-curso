@@ -1,11 +1,11 @@
 import { Processo } from "@prisma/client";
+import { AppError } from "../../../../errors/AppError";
 import { prisma } from "../../../../prisma/client";
 import { CreateUserDTO } from "../../dtos/CreateUserDTO";
 
 export class CreateProcessUseCase {
   async execute(req: CreateUserDTO): Promise<Processo> {
     const { titulo, tipo, descricao, setor } = req;
-
     const processAlreadyExist = await prisma.processo.findFirst({
       where: {
         setor: setor,
@@ -13,7 +13,7 @@ export class CreateProcessUseCase {
       },
     });
 
-    console.log(processAlreadyExist);
+    if (processAlreadyExist) throw new AppError("Usuário já existe");
 
     //Criar o processo
     const process = await prisma.processo.create({
