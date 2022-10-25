@@ -1,13 +1,12 @@
 import { Processo } from "@prisma/client";
+import { AppError } from "../../../../errors/AppError";
 import { prisma } from "../../../../prisma/client";
 
-export class GetProcessBySection {
-  async execute(setor: string) {
-    const process = prisma.processo.findMany({
+export class GetSingleProcess {
+  async execute(id: string): Promise<Processo> {
+    const process = await prisma.processo.findFirst({
       where: {
-        setor: {
-          contains: setor,
-        },
+        id,
       },
       include: {
         descricao: {
@@ -22,6 +21,8 @@ export class GetProcessBySection {
         },
       },
     });
+
+    if (!process) throw new AppError("Não encontrado nenhum processo", 404);
 
     return process;
   }
