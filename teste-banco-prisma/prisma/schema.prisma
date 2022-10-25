@@ -57,7 +57,7 @@ model Items {
 
 model Documentos {
   id         String             @id @default(uuid())
-  titulo     String
+  titulo     String?
   antigo     DocumentoAntigos[]
   processo   Processo?          @relation(fields: [processoId], references: [id])
   processoId String?            @unique
@@ -65,7 +65,7 @@ model Documentos {
 
 model DocumentoAntigos {
   id           String      @id @default(uuid())
-  titulo       String
+  titulo       String?
   Documentos   Documentos? @relation(fields: [documentosId], references: [id])
   documentosId String?
 }
