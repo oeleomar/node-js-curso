@@ -10,7 +10,7 @@ const multerConfig = {
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
       if (file.fieldname === "video") {
-        cb(null, path.resolve(__dirname, "..", "..", "static", "videos"));
+        cb(null, path.resolve(__dirname, "..", "..", "public", "videos"));
       } else if (file.fieldname === "file") {
         cb(null, path.resolve(__dirname, "..", "..", "public", "docs"));
       } else {
