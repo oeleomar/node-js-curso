@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const process = new mongoose.Schema({
+  ativo: Boolean,
   setor: String,
   tipo: String,
   titulo: String,

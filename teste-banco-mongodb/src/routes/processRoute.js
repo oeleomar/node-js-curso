@@ -6,11 +6,13 @@ import { CreateProcessController } from "../controller/CreateProcess/CreateProce
 import { AppError } from "../errors/AppError.js";
 import { removeFiles } from "../utils/removeFiles.js";
 import { GetProcessController } from "../controller/GetProcess/GetProcessController.js";
+import { UpdateProcessController } from "../controller/UpdateProcess/UpdateProcessController.js";
 
 const processRoute = Router();
 
 const createProcessController = new CreateProcessController();
 const getProcessController = new GetProcessController();
+const updateProcessController = new UpdateProcessController();
 
 //Create
 processRoute.post(
@@ -19,7 +21,8 @@ processRoute.post(
     { name: "file", maxCount: 1 },
     { name: "video", maxCount: 1 },
   ]),
-  async (req, res) => {
+  async (req, res, err) => {
+    console.log(err);
     try {
       const process = await createProcessController.handle(req.body, req.files);
       if (process instanceof AppError) {
@@ -35,7 +38,7 @@ processRoute.post(
   },
 );
 
-//Read one
+//Read one setor
 processRoute.get("/:setor", async (req, res) => {
   const { setor } = req.params;
   try {
@@ -49,7 +52,35 @@ processRoute.get("/:setor", async (req, res) => {
 //Read All
 
 //Update
+processRoute.put(
+  "/:id",
+  multer(multerConfig).fields([
+    { name: "file", maxCount: 1 },
+    { name: "video", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    //
+    const { id } = req.params;
+    try {
+      const data = await updateProcessController.handle(
+        id,
+        req.body,
+        req.files,
+      );
 
+      if (data instanceof AppError) {
+        if (req.files.file) removeFiles(req.files.file[0].path);
+        if (req.files.video) removeFiles(req.files.video[0].path);
+        return res.status(data.statusCode).json(data);
+      }
+
+      return res.json({ data: "Atualizado com sucesso", statusCode: 200 });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json(new AppError("Internal server error", 500));
+    }
+  },
+);
 //Delete
 
 export { processRoute };
